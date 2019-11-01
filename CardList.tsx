@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import ExpandedCard from './ExpandedCard';
-import CollapsedCard from './CollapsedCard';
+import CollapsibleCard from './CollapsibleCard';
 
 export default function CardList() {
     const courses = [
@@ -12,13 +11,12 @@ export default function CardList() {
 
     const courseCards = [];
     for (let c of courses) {
-        courseCards.push(<ExpandedCard course={c} key={c.department + c.courseNum} />)
+        courseCards.push(<CollapsibleCard course={c} key={c.department + c.courseNum} />)
     }
 
     return (
         <View>
             {courseCards}
-            <CollapsedCard course={courses[0]} />
         </View>
     )
 }

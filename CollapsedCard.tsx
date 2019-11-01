@@ -10,7 +10,7 @@ export interface CardProps {
 }
 
 export default function CollapsedCard(props: CardProps) {
-    const {course} = props;
+    const {course, onExpand} = props;
     const [department, setDepartment] = useState(course.department);
     const [courseNum, setCourseNum] = useState(course.courseNum);
 
@@ -20,7 +20,11 @@ export default function CollapsedCard(props: CardProps) {
                 <Icon name="remove" type="MaterialIcons" style={styles.removeIcon} />
             <H3 style={styles.white}>{department} {courseNum}</H3>
             </View>
-            <Icon name="keyboard-arrow-down" type="MaterialIcons" style={styles.white} />
+            <Icon 
+                name="keyboard-arrow-down" 
+                type="MaterialIcons" 
+                style={styles.white}
+                onPress={() => onExpand()} />
         </View>
     )
 }
@@ -35,6 +39,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
+        margin: 8
     },
     header: {
         flexDirection: 'row',

@@ -5,12 +5,8 @@ import { Form, Input, Item, Icon, CheckBox, ListItem } from 'native-base';
 
 import Course from './Course';
 
-export interface CardProps {
-    course: Course
-}
-
-export default function ExpandedCard(props: CardProps) {
-    const {course} = props;
+export default function ExpandedCard(props) {
+    const {course, onCollapse} = props;
     const [department, setDepartment] = useState(course.department);
     const [courseNum, setCourseNum] = useState(course.courseNum);
 
@@ -38,7 +34,11 @@ export default function ExpandedCard(props: CardProps) {
         <View style={styles.card}>
             <View style={styles.header}>
                 <Text style={styles.collapse}>Collapse</Text>
-                <Icon name="keyboard-arrow-down" type="MaterialIcons" style={styles.white}/>
+                <Icon 
+                    name="keyboard-arrow-up" 
+                    type="MaterialIcons" 
+                    style={styles.white}
+                    onPress={() => onCollapse()}/>
             </View>
             <Form style={styles.flexRow}>
                 <Item style={styles.halfRow}>
