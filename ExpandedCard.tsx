@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Form, Input, Item, Icon } from 'native-base';
+import { Form, Input, Item, Icon, CheckBox, ListItem } from 'native-base';
 
 import Course from './Course';
 
@@ -13,6 +13,26 @@ export default function ExpandedCard(props: CardProps) {
     const {course} = props;
     const [department, setDepartment] = useState(course.department);
     const [courseNum, setCourseNum] = useState(course.courseNum);
+
+    const sections = [
+        {course: 'ignore', sectionNum: '201', professor: 'Alan Pepper', seatsOpen: 20, seatsTotal: 22},
+        {course: 'ignore', sectionNum: '501', professor: 'Aakash Tyagi', seatsOpen: 0, seatsTotal: 18},
+        {course: 'ignore', sectionNum: '502', professor: 'Eun Kim', seatsOpen: 57, seatsTotal: 100}
+    ];
+
+    function renderSection(section) {
+        const {sectionNum, professor, seatsOpen, seatsTotal} = section;
+        return (<ListItem style={styles.flexRow} key={sectionNum}>
+            <CheckBox />
+            <Text style={styles.morePadding}>{sectionNum}</Text>
+            <Text style={styles.morePadding}>{professor}</Text>
+            <Text style={styles.lastText}>{seatsOpen}/{seatsTotal} available</Text>
+        </ListItem>);
+    }
+
+    const sectionsList = [];
+    for (let sec of sections)
+        sectionsList.push(renderSection(sec));
 
     return (
         <View style={styles.card}>
@@ -28,7 +48,8 @@ export default function ExpandedCard(props: CardProps) {
                     <Input placeholder="Course Number" onChangeText={text => setCourseNum(text)} />
                 </Item>
             </Form>
-            <Text>Section list will go here for {department} {courseNum}</Text>
+            <Text style={styles.cardPaddingFix}>Select sections to watch:</Text>
+            {sectionsList}
         </View>
     )
 }
@@ -42,7 +63,8 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginTop: 8,
         marginBottom: 8,
-        paddingTop: 28
+        paddingTop: 28,
+        paddingLeft: 4
     },
     header: {
         position: 'absolute',
@@ -74,4 +96,19 @@ const styles = StyleSheet.create({
     halfRow: {
         flex: 1,
     },
+    morePadding: {
+        paddingRight: 8,
+        paddingLeft: 8
+    },
+    moreMargin: {
+        marginRight: 8
+    },
+    lastText: {
+        flexGrow: 1,
+        textAlign: 'right'
+    },
+    cardPaddingFix: {
+        paddingLeft: 16,
+        marginTop: 8
+    }
 });

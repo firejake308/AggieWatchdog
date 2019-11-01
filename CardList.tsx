@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import ExpandedCard from './ExpandedCard';
+import CollapsedCard from './CollapsedCard';
 
 export default function CardList() {
     const courses = [
@@ -17,6 +18,7 @@ export default function CardList() {
     return (
         <View>
             {courseCards}
+            <CollapsedCard course={courses[0]} />
         </View>
     )
 }
