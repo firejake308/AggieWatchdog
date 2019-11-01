@@ -1,34 +1,35 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Form, Input, Item, Icon, CheckBox, ListItem } from 'native-base';
+import { Form, Input, Item, Icon, CheckBox, ListItem, Button } from 'native-base';
 
 import Course from './Course';
+import { Platform } from '@unimodules/core';
 
 export default function ExpandedCard(props) {
     const {course, onCollapse} = props;
     const [department, setDepartment] = useState(course.department);
     const [courseNum, setCourseNum] = useState(course.courseNum);
+    const [sections, setSections] = useState([]);
 
-    const sections = [
-        {course: 'ignore', sectionNum: '201', professor: 'Alan Pepper', seatsOpen: 20, seatsTotal: 22},
-        {course: 'ignore', sectionNum: '501', professor: 'Aakash Tyagi', seatsOpen: 0, seatsTotal: 18},
-        {course: 'ignore', sectionNum: '502', professor: 'Eun Kim', seatsOpen: 57, seatsTotal: 100}
-    ];
+    function loadSections() {
+        // this will be replaced by a server call, so probably useEffects
+        setSections([
+            {course: 'ignore', sectionNum: '201', professor: 'Alan Pepper', seatsOpen: 20, seatsTotal: 22, watched: false},
+            {course: 'ignore', sectionNum: '501', professor: 'Aakash Tyagi', seatsOpen: 0, seatsTotal: 18, watched: true},
+            {course: 'ignore', sectionNum: '502', professor: 'Eun Kim', seatsOpen: 57, seatsTotal: 100, watched: false}]);
+    }
 
     function renderSection(section) {
-        const {sectionNum, professor, seatsOpen, seatsTotal} = section;
+        const {sectionNum, professor, seatsOpen, seatsTotal, watched} = section;
         return (<ListItem style={styles.flexRow} key={sectionNum}>
-            <CheckBox />
+            <CheckBox checked={watched} onPress={() => setSections(sections.map(sec => 
+                sec.sectionNum === sectionNum ? {...sec, watched: !sec.watched} : sec))} />
             <Text style={styles.morePadding}>{sectionNum}</Text>
             <Text style={styles.morePadding}>{professor}</Text>
             <Text style={styles.lastText}>{seatsOpen}/{seatsTotal} available</Text>
         </ListItem>);
     }
-
-    const sectionsList = [];
-    for (let sec of sections)
-        sectionsList.push(renderSection(sec));
 
     return (
         <View style={styles.card}>
@@ -42,14 +43,32 @@ export default function ExpandedCard(props) {
             </View>
             <Form style={styles.flexRow}>
                 <Item style={styles.halfRow}>
-                    <Input placeholder="Department" onChangeText={text => setDepartment(text)} />
+                    <Input placeholder="Department" onChangeText={text => {
+                        setSections([])
+                        setCourseNum('')
+                        setDepartment(text)
+                    }} />
                 </Item>
                 <Item style={styles.halfRow}>
-                    <Input placeholder="Course Number" onChangeText={text => setCourseNum(text)} />
+                    <Input placeholder="Course Number" onChangeText={text => {
+                        setSections([])
+                        setCourseNum(text)
+                    }} />
                 </Item>
             </Form>
-            <Text style={styles.cardPaddingFix}>Select sections to watch:</Text>
-            {sectionsList}
+            {
+                sections.length ? (
+                    <View>
+                        <Text style={styles.cardPaddingFix}>Select sections to watch:</Text> 
+                        {sections.map(sec => renderSection(sec))}
+                    </View>) 
+                :   <Button transparent onPress={loadSections} style={styles.loadSections}>
+                        <Text style={styles.flatButton}>
+                            {Platform.OS === 'android' ? 'LOAD SECTIONS' : 'Load Sections'}
+                        </Text>
+                    </Button>
+                
+            }
         </View>
     )
 }
@@ -110,5 +129,13 @@ const styles = StyleSheet.create({
     cardPaddingFix: {
         paddingLeft: 16,
         marginTop: 8
+    },
+    loadSections: {
+        alignSelf: 'flex-end',
+        marginTop: 8,
+    },
+    flatButton: {
+        color: '#500000',
+        fontWeight: 'bold'
     }
 });

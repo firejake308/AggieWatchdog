@@ -6,7 +6,8 @@ import { Form, Input, Item, Icon, CheckBox, ListItem, H3 } from 'native-base';
 import Course from './Course';
 
 export interface CardProps {
-    course: Course
+    course: Course,
+    onExpand: VoidFunction
 }
 
 export default function CollapsedCard(props: CardProps) {
