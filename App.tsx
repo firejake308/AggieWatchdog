@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Platform, StatusBar } from 'react-native';
-import { Root, Container, Header, Left, Right, Title, Icon, Content } from 'native-base';
+import { Root, Container, Header, Body, Right, Title, Icon, Content, Button } from 'native-base';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 
@@ -31,14 +31,16 @@ export default function App() {
     <Root>
       <Container>
         <Header style={styles.customHeader}>
-          <Left>
+          <Body>
             <Title>PingMe</Title>
-          </Left>
+          </Body>
           <Right>
-            <Icon name="save" color="white" />
+            <Button transparent>
+              <Icon name="save" style={styles.lightIcon} />
+            </Button>
           </Right>
         </Header>
-        <Content>
+        <Content style={styles.container}>
           <CardList />
         </Content>
       </Container>
@@ -48,13 +50,14 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#ddd',
   },
   customHeader: {
     paddingTop: StatusBar.currentHeight,
-    height: 54 + StatusBar.currentHeight
-  }
+    height: 54 + StatusBar.currentHeight,
+    backgroundColor: '#500000',
+  },
+  lightIcon: {
+    color: 'white',
+  },
 });

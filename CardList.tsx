@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import Card from './Card';
+import ExpandedCard from './ExpandedCard';
 
 export default function CardList() {
     const courses = [
@@ -11,7 +11,7 @@ export default function CardList() {
 
     const courseCards = [];
     for (let c of courses) {
-        courseCards.push(<Card course={c} key={c.department + c.courseNum} />)
+        courseCards.push(<ExpandedCard course={c} key={c.department + c.courseNum} />)
     }
 
     return (
