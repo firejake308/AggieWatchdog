@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Platform, StatusBar } from 'react-native';
-import { Root, Container, Header, Left, Right, Title, Icon } from 'native-base';
+import { Root, Container, Header, Left, Right, Title, Icon, Content } from 'native-base';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
+
+import CardList from './CardList';
 
 export default function App() {
   const [loading, setLoading] =  useState(true);
@@ -36,6 +38,9 @@ export default function App() {
             <Icon name="save" color="white" />
           </Right>
         </Header>
+        <Content>
+          <CardList />
+        </Content>
       </Container>
     </Root>
   );
