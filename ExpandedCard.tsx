@@ -7,8 +7,15 @@ import Course from './Course';
 import { Platform } from '@unimodules/core';
 import Section from './Section';
 
-export default function ExpandedCard(props: { course: Course; onCollapse: Function; onChangeCourse: Function; }) {
-    const {course, onCollapse, onChangeCourse} = props;
+interface ExpandedCardProps { 
+    course: Course; 
+    onCollapse: Function; 
+    onChangeCourse: Function; 
+    onRemove: (e?: any) => any 
+}
+
+export default function ExpandedCard(props: ExpandedCardProps) {
+    const {course, onCollapse, onChangeCourse, onRemove} = props;
     const [department, setDepartment] = useState(course.department);
     const [courseNum, setCourseNum] = useState(course.courseNum);
     const [sections, setSections] = useState([]);
@@ -49,7 +56,7 @@ export default function ExpandedCard(props: { course: Course; onCollapse: Functi
     return (
         <View style={styles.card}>
             <View style={styles.header}>
-                <TouchableWithoutFeedback onPress={() => onCollapse()}>
+                <TouchableWithoutFeedback onPress={onRemove}>
                     <View style={styles.headerGroup}>
                         <Icon
                             name="remove"
