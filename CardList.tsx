@@ -3,6 +3,8 @@ import { View, AppState, Alert } from 'react-native';
 import Toast from 'react-native-simple-toast';
 
 import CollapsibleCard from './CollapsibleCard';
+import { registerPushNotifications, SERVER_URL } from './util';
+import { Notifications } from 'expo';
 
 let numCardsCreated = 0;
 const CardList = React.forwardRef((props, ref) => {
@@ -19,7 +21,6 @@ const CardList = React.forwardRef((props, ref) => {
         ];
         numCardsCreated = res.length;
         setCourses(res);
-        setServerCourses(res);
     }, []);
 
     function removeCard(toRemove: number) {
@@ -27,11 +28,35 @@ const CardList = React.forwardRef((props, ref) => {
     }
 
     function updateServerCourses() {
+        console.log('updateServerCourses() called');
         if (JSON.stringify(serverCourses) !== JSON.stringify(courses)) {
             console.log('Local courses length: ' + courses.length)
             console.log('Server courses length: ' + serverCourses.length)
             // send update to server
             const body = courses;
+            // initial registration if necessary
+            if (serverCourses.length === 0)
+                registerPushNotifications().then(status => {
+                    if (status)
+                        console.log('Yes, I have permission to post notifications');
+                    else
+                        console.log('No, I do not have permission to post notifications')
+                }).catch(() =>
+                    Toast.show('Notifications don\'t seem to work on this device')
+                );
+            // push new courses to server
+            Notifications.getExpoPushTokenAsync().then(token => {
+                fetch(SERVER_URL+`/users/${token}/sections`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({sections: courses.map(({course: {department, courseNum}}) => ({
+                        department, courseNum
+                    }))})
+                }).then(res => console.log(res.status))
+            });
+            
             // save new server state
             setServerCourses(body);
         }
