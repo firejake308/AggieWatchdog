@@ -6,6 +6,7 @@ import { Form, Input, Item, Icon, CheckBox, ListItem, Button } from 'native-base
 import Course from './Course';
 import { Platform } from '@unimodules/core';
 import Section from './Section';
+import validDepartments from './depts_list.json';
 
 interface ExpandedCardProps { 
     course: Course; 
@@ -19,6 +20,7 @@ export default function ExpandedCard(props: ExpandedCardProps) {
     const [department, setDepartment] = useState(course.department);
     const [courseNum, setCourseNum] = useState(course.courseNum);
     const [sections, setSections] = useState([]);
+    const [isDeptValid, setDeptValid] = useState(true);
 
     function loadSections() {
         // this will be replaced by a server call, so probably useEffects
@@ -37,6 +39,10 @@ export default function ExpandedCard(props: ExpandedCardProps) {
             <Text style={styles.morePadding}>{professor}</Text>
             <Text style={styles.lastText}>{seatsOpen}/{seatsTotal} available</Text>
         </ListItem>);
+    }
+
+    function validateDepartment(input: string) {
+        setDeptValid(validDepartments.includes(input));
     }
 
     function updateDepartment(newVal: string) {
@@ -76,15 +82,17 @@ export default function ExpandedCard(props: ExpandedCardProps) {
                 </TouchableWithoutFeedback>
             </View>
             <Form style={styles.flexRow}>
-                <Item style={styles.halfRow}>
+                <Item style={styles.halfRow} error={!isDeptValid}>
                     <Input 
                         placeholder="Department" 
                         value={department}
+                        autoCapitalize="characters"
                         onChangeText={text => {
                             setSections([])
                             setCourseNum('')
                             updateDepartment(text)
-                        }} 
+                        }}
+                        onBlur={() => validateDepartment(department)}
                     />
                 </Item>
                 <Item style={styles.halfRow}>
