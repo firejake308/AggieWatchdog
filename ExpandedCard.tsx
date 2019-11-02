@@ -43,7 +43,7 @@ export default function ExpandedCard(props: ExpandedCardProps) {
         // control the input component
         setDepartment(newVal);
         // notify parent
-        onChangeCourse({...course, department: newVal});
+        onChangeCourse({ department: newVal, courseNum: '' });
     }
 
     function updateCourseNum(newVal: string) {
