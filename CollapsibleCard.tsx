@@ -3,13 +3,17 @@ import { useState } from 'react';
 
 import CollapsedCard from './CollapsedCard';
 import ExpandedCard from './ExpandedCard';
+import Course from './Course';
 
-export default function CollapsibleCard(props) {
-    const {course} = props;
+export default function CollapsibleCard(props: { course: Course; }) {
     const [collapsed, setCollapsed] = useState(false);
+    const [course, setCourse] = useState(props.course);
 
     if (collapsed)
         return <CollapsedCard course={course} onExpand={() => setCollapsed(false)} />
     else
-        return <ExpandedCard course={course} onCollapse={() => setCollapsed(true)} />
+        return <ExpandedCard 
+                    course={course} 
+                    onCollapse={() => setCollapsed(true)}
+                    onChangeCourse={async (newCourse: Course) => setCourse(newCourse)} />
 }

@@ -12,8 +12,7 @@ export interface CardProps {
 
 export default function CollapsedCard(props: CardProps) {
     const {course, onExpand} = props;
-    const [department, setDepartment] = useState(course.department);
-    const [courseNum, setCourseNum] = useState(course.courseNum);
+    const {department, courseNum} = course;
 
     return (
         <View style={styles.card}>

@@ -5,9 +5,10 @@ import { Form, Input, Item, Icon, CheckBox, ListItem, Button } from 'native-base
 
 import Course from './Course';
 import { Platform } from '@unimodules/core';
+import Section from './Section';
 
-export default function ExpandedCard(props) {
-    const {course, onCollapse} = props;
+export default function ExpandedCard(props: { course: Course; onCollapse: Function; onChangeCourse: Function; }) {
+    const {course, onCollapse, onChangeCourse} = props;
     const [department, setDepartment] = useState(course.department);
     const [courseNum, setCourseNum] = useState(course.courseNum);
     const [sections, setSections] = useState([]);
@@ -20,7 +21,7 @@ export default function ExpandedCard(props) {
             {course: 'ignore', sectionNum: '502', professor: 'Eun Kim', seatsOpen: 57, seatsTotal: 100, watched: false}]);
     }
 
-    function renderSection(section) {
+    function renderSection(section: Section) {
         const {sectionNum, professor, seatsOpen, seatsTotal, watched} = section;
         return (<ListItem style={styles.flexRow} key={sectionNum}>
             <CheckBox checked={watched} onPress={() => setSections(sections.map(sec => 
@@ -29,6 +30,20 @@ export default function ExpandedCard(props) {
             <Text style={styles.morePadding}>{professor}</Text>
             <Text style={styles.lastText}>{seatsOpen}/{seatsTotal} available</Text>
         </ListItem>);
+    }
+
+    function updateDepartment(newVal: string) {
+        // control the input component
+        setDepartment(newVal);
+        // notify parent
+        onChangeCourse({...course, department: newVal});
+    }
+
+    function updateCourseNum(newVal: string) {
+        // control the input component
+        setCourseNum(newVal);
+        // notify parent
+        onChangeCourse({...course, courseNum: newVal});
     }
 
     return (
@@ -43,17 +58,25 @@ export default function ExpandedCard(props) {
             </View>
             <Form style={styles.flexRow}>
                 <Item style={styles.halfRow}>
-                    <Input placeholder="Department" onChangeText={text => {
-                        setSections([])
-                        setCourseNum('')
-                        setDepartment(text)
-                    }} />
+                    <Input 
+                        placeholder="Department" 
+                        value={department}
+                        onChangeText={text => {
+                            setSections([])
+                            setCourseNum('')
+                            updateDepartment(text)
+                        }} 
+                    />
                 </Item>
                 <Item style={styles.halfRow}>
-                    <Input placeholder="Course Number" onChangeText={text => {
-                        setSections([])
-                        setCourseNum(text)
-                    }} />
+                    <Input 
+                        placeholder="Course Number"
+                        value={courseNum} 
+                        onChangeText={text => {
+                            setSections([])
+                            updateCourseNum(text)
+                        }} 
+                    />
                 </Item>
             </Form>
             {
