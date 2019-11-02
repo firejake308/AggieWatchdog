@@ -1,9 +1,7 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 
 import CollapsibleCard from './CollapsibleCard';
-import Course from './Course';
-import { Fab, Button, Icon, Card } from 'native-base';
 
 let numCardsCreated = 3;
 const CardList = React.forwardRef((props, ref) => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Platform, StatusBar } from 'react-native';
+import { StyleSheet, StatusBar } from 'react-native';
 import { Root, Container, Header, Body, Right, Title, Icon, Content, Button, Fab } from 'native-base';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
@@ -46,7 +46,9 @@ export default function App() {
         </Content>
         <Fab
                 position="bottomRight"
-                onPress={() => cardListRef.current && cardListRef.current.addCard()}
+                onPress={
+                  // @ts-ignore
+                  () => cardListRef.current && cardListRef.current.addCard()}
                 style={{backgroundColor: '#500000'}}
             >
                 <Icon name="add" />
