@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight, TouchableWithoutFeedback } from 'react-native';
 import { Form, Input, Item, Icon, CheckBox, ListItem, Button } from 'native-base';
 
 import Course from './Course';
@@ -49,12 +49,24 @@ export default function ExpandedCard(props: { course: Course; onCollapse: Functi
     return (
         <View style={styles.card}>
             <View style={styles.header}>
-                <Text style={styles.collapse}>Collapse</Text>
-                <Icon 
-                    name="keyboard-arrow-up" 
-                    type="MaterialIcons" 
-                    style={styles.white}
-                    onPress={() => onCollapse()}/>
+                <TouchableWithoutFeedback onPress={() => onCollapse()}>
+                    <View style={styles.headerGroup}>
+                        <Icon
+                            name="remove"
+                            type="MaterialIcons"
+                            style={styles.white} />
+                        <Text style={styles.headerActionStyle}>Remove</Text>
+                    </View>
+                </TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={() => onCollapse()}>
+                    <View style={styles.headerGroup}>
+                        <Text style={styles.headerActionStyle}>Collapse</Text>
+                        <Icon
+                            name="keyboard-arrow-up" 
+                            type="MaterialIcons" 
+                            style={styles.white} />
+                    </View>
+                </TouchableWithoutFeedback>
             </View>
             <Form style={styles.flexRow}>
                 <Item style={styles.halfRow}>
@@ -121,13 +133,17 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 4,
         borderTopRightRadius: 4,
         flexDirection: 'row',
-        justifyContent: 'flex-end',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    headerGroup: {
+        flexDirection: 'row',
         alignItems: 'center',
     },
     white: {
         color: 'white',
     },
-    collapse: {
+    headerActionStyle: {
         color: 'white',
         fontSize: 16,
         fontWeight: 'bold',
