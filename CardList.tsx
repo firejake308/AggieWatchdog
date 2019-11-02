@@ -26,6 +26,17 @@ const CardList = React.forwardRef((props, ref) => {
         setCourses(courses.filter(({cardId}) => cardId !== toRemove));
     }
 
+    function updateServerCourses() {
+        if (JSON.stringify(serverCourses) !== JSON.stringify(courses)) {
+            console.log('Local courses length: ' + courses.length)
+            console.log('Server courses length: ' + serverCourses.length)
+            // send update to server
+            const body = courses;
+            // save new server state
+            setServerCourses(body);
+        }
+    }
+
     React.useImperativeHandle(ref, () => ({
         addCard() {
             setCourses([...courses, {
@@ -36,23 +47,14 @@ const CardList = React.forwardRef((props, ref) => {
                 }
             }])
         },
-        updateCourses() {
-            if (JSON.stringify(serverCourses) !== JSON.stringify(courses)) {
-                console.log('Local courses length: ' + courses.length)
-                console.log('Server courses length: ' + serverCourses.length)
-                // send update to server
-                const body = courses;
-                // save new server state
-                setServerCourses(body);
-            }
-        }
+        updateCourses: updateServerCourses
     }));
 
     // watch app state
     React.useEffect(() => {
         function handleAppStateChange(newState: string) {
-            if (newState !== 'active' && serverCourses !== courses) {
-                // TODO save state to server
+            if (newState !== 'active') {
+                updateServerCourses();
             }
         }
         AppState.addEventListener('change', handleAppStateChange);
