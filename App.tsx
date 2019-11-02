@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, StatusBar } from 'react-native';
+import { StyleSheet, StatusBar, TouchableHighlight, TouchableNativeFeedback } from 'react-native';
 import { Root, Container, Header, Body, Right, Title, Icon, Content, Button, Fab } from 'native-base';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
@@ -37,11 +37,12 @@ export default function App() {
             <Title>PingMe</Title>
           </Body>
           <Right>
-            <Button transparent>
-              <Icon name="save" style={styles.lightIcon}
-                onPress={
-                  // @ts-ignore
-                  () => cardListRef.current && cardListRef.current.updateCourses()} />
+            <Button 
+              style={styles.flatButton}
+              onPress={
+                // @ts-ignore
+                () => cardListRef.current && cardListRef.current.updateCourses()}>
+              <Icon name="save" style={styles.lightIcon} />
             </Button>
           </Right>
         </Header>
@@ -74,4 +75,7 @@ const styles = StyleSheet.create({
   lightIcon: {
     color: 'white',
   },
+  flatButton: {
+    backgroundColor: '#500000',
+  }
 });

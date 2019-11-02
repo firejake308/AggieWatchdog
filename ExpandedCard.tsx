@@ -94,6 +94,7 @@ export default function ExpandedCard(props: ExpandedCardProps) {
                         }}
                         onBlur={() => validateDepartment(department)}
                     />
+                    {isDeptValid ? [] : <Icon name="error" type="MaterialIcons" color="red" /> }
                 </Item>
                 <Item style={styles.halfRow}>
                     <Input 

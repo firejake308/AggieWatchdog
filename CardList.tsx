@@ -5,35 +5,48 @@ import Toast from 'react-native-simple-toast';
 import CollapsibleCard from './CollapsibleCard';
 import { registerPushNotifications, SERVER_URL } from './util';
 import { Notifications } from 'expo';
+import Course from './Course';
+import validDepartments from './depts_list.json';
 
 let numCardsCreated = 0;
-const CardList = React.forwardRef((props, ref) => {
+const CardList = React.forwardRef((_props, ref) => {
     const [courses, setCourses] = React.useState([]);
     const [serverCourses, setServerCourses] = React.useState([]);
     // TODO empty card for initial state
 
     // fetch courses from server on initial load
     React.useEffect(() => {
-        const res = [
-            {cardId: 0, course: {department: 'BIOL', courseNum: '214'}},
-            {cardId: 1, course: {department: 'CSCE', courseNum: '222'}},
-            {cardId: 2, course: {department: 'PHYS', courseNum: '218'}},
-        ];
-        numCardsCreated = res.length;
-        setCourses(res);
+        Notifications.getExpoPushTokenAsync().then(token => {
+            fetch(SERVER_URL + `/users/${token}/sections`).then(res => res.json()).then(({sections}) => {
+                const builtCourses = sections.map((sec: Course) => ({cardId: numCardsCreated++, course: sec}))
+                setCourses(builtCourses);
+                setServerCourses(builtCourses);
+            })
+        });
     }, []);
 
     function removeCard(toRemove: number) {
         setCourses(courses.filter(({cardId}) => cardId !== toRemove));
     }
 
+    function handleCourseChange(cardId: number, newCourse: Course) {
+        setCourses(courses.map(course => course.cardId === cardId ?
+            {cardId: cardId, course: newCourse} : course
+        ));
+    }
+
     function updateServerCourses() {
         console.log('updateServerCourses() called');
         if (JSON.stringify(serverCourses) !== JSON.stringify(courses)) {
-            console.log('Local courses length: ' + courses.length)
-            console.log('Server courses length: ' + serverCourses.length)
-            // send update to server
-            const body = courses;
+            // validate departments
+            console.log(serverCourses);
+            console.log(courses);
+            if (courses.some(course => !validDepartments.includes(course.department) || !course.courseNum)) {
+                // at least one dept is invalid
+                Alert.alert('Invalid Input', 'At least one of the courses you have entered appears to be invalid.'
+                +' Please check for typos.');
+            }
+
             // initial registration if necessary
             if (serverCourses.length === 0)
                 registerPushNotifications().then(status => {
@@ -45,6 +58,9 @@ const CardList = React.forwardRef((props, ref) => {
                     Toast.show('Notifications don\'t seem to work on this device')
                 );
             // push new courses to server
+            console.log(JSON.stringify({sections: courses.map(({course: {department, courseNum}}) => ({
+                department, courseNum
+            }))}));
             Notifications.getExpoPushTokenAsync().then(token => {
                 fetch(SERVER_URL+`/users/${token}/sections`, {
                     method: 'POST',
@@ -58,7 +74,7 @@ const CardList = React.forwardRef((props, ref) => {
             });
             
             // save new server state
-            setServerCourses(body);
+            setServerCourses(courses);
         }
     }
 
@@ -94,6 +110,7 @@ const CardList = React.forwardRef((props, ref) => {
                 <CollapsibleCard 
                     course={course} 
                     onRemoveCourse={() => removeCard(cardId)}
+                    onChange={newCourse => handleCourseChange(cardId, newCourse)}
                     key={cardId} 
                 />)}
         </View>

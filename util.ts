@@ -24,7 +24,7 @@ export async function registerPushNotifications() {
     let token = await Notifications.getExpoPushTokenAsync();
 
     // push token to backend
-    const res = await fetch(SERVER_URL + `/users/${token}/sections`, {method: 'POST', body: JSON.stringify([])});
+    const res = await fetch(SERVER_URL + `/users/${token}`, {method: 'PUT'});
     if (res.ok)
         return true;
     else

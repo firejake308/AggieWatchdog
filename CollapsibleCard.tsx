@@ -5,17 +5,25 @@ import CollapsedCard from './CollapsedCard';
 import ExpandedCard from './ExpandedCard';
 import Course from './Course';
 
-export default function CollapsibleCard(props: { course: Course; onRemoveCourse: (e?: any) => any;}) {
-    const {onRemoveCourse} = props;
-    const [collapsed, setCollapsed] = useState(false);
-    const [course, setCourse] = useState(props.course);
+interface CollapsibleCardProps {
+    course: Course; 
+    onRemoveCourse: (e?: any) => any; 
+    onChange: (c: Course) => any;
+}
 
+export default function CollapsibleCard(props: CollapsibleCardProps) {
+    const {onRemoveCourse, onChange, course} = props;
+    const [collapsed, setCollapsed] = useState(false);
+
+    if (course)
+    console.log('rendering collapsible card for '+course.department+course.courseNum);
+    
     if (collapsed)
         return <CollapsedCard course={course} onExpand={() => setCollapsed(false)} onRemove={onRemoveCourse} />
     else
         return <ExpandedCard 
                     course={course} 
                     onCollapse={() => setCollapsed(true)}
-                    onChangeCourse={async (newCourse: Course) => setCourse(newCourse)}
+                    onChangeCourse={(newCourse: Course) => onChange(newCourse)}
                     onRemove={onRemoveCourse} />
 }
