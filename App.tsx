@@ -9,7 +9,8 @@ import CardList from './CardList';
 export default function App() {
   const [loading, setLoading] =  useState(true);
   const cardListRef = React.useRef();
-  
+
+  // load fonts before rendering native base elements
   useEffect(() => {
     async function loadFont() {
       await Font.loadAsync({
@@ -37,7 +38,10 @@ export default function App() {
           </Body>
           <Right>
             <Button transparent>
-              <Icon name="save" style={styles.lightIcon} />
+              <Icon name="save" style={styles.lightIcon}
+                onPress={
+                  // @ts-ignore
+                  () => cardListRef.current && cardListRef.current.updateCourses()} />
             </Button>
           </Right>
         </Header>
