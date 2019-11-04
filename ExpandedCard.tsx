@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { StyleSheet, Text, View, TouchableWithoutFeedback, findNodeHandle } from 'react-native';
-import { Form, Input, Item, Icon, CheckBox, ListItem, Button } from 'native-base';
+import { Form, Input, Item, Icon, CheckBox, ListItem, Button, Spinner } from 'native-base';
 
 import Course from './Course';
 import { Platform } from '@unimodules/core';
@@ -18,15 +18,17 @@ interface ExpandedCardProps {
 
 export default function ExpandedCard(props: ExpandedCardProps) {
     const {course, onCollapse, onChangeCourse, onRemove} = props;
-    const [department, setDepartment] = useState(course.department);
-    const [courseNum, setCourseNum] = useState(course.courseNum);
+    const {department, courseNum} = course;
     const [sections, setSections] = useState([]);
     const [isDeptValid, setDeptValid] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     function loadSections() {
+        setLoading(true)
         fetch(SERVER_URL+'/sections?department='+department+'&courseNum='+courseNum).then(
             res => res.json()).then(res => {
             setSections(res);
+            setLoading(false);
         }).catch(err => console.log(err));
     }
 
@@ -45,15 +47,11 @@ export default function ExpandedCard(props: ExpandedCardProps) {
     }
 
     function updateDepartment(newVal: string) {
-        // control the input component
-        setDepartment(newVal);
         // notify parent
         onChangeCourse({ department: newVal, courseNum: '', sections: [] });
     }
 
     function updateCourseNum(newVal: string) {
-        // control the input component
-        setCourseNum(newVal);
         // notify parent
         onChangeCourse({...course, courseNum: newVal, sections: []});
     }
@@ -95,7 +93,6 @@ export default function ExpandedCard(props: ExpandedCardProps) {
                         autoCapitalize="characters"
                         onChangeText={text => {
                             setSections([])
-                            setCourseNum('')
                             updateDepartment(text)
                         }}
                         onBlur={() => validateDepartment(department)}
@@ -119,11 +116,17 @@ export default function ExpandedCard(props: ExpandedCardProps) {
                         <Text style={styles.cardPaddingFix}>Select sections to watch:</Text> 
                         {sections.map(sec => renderSection(sec))}
                     </View>) 
-                :   <Button transparent onPress={loadSections} style={styles.loadSections}>
-                        <Text style={styles.flatButton}>
-                            {Platform.OS === 'android' ? 'LOAD SECTIONS' : 'Load Sections'}
+                :   (loading ? <Spinner color="#500000" /> : 
+                    (<View>
+                        <Text style={styles.cardPaddingFix}>
+                            Currently watching sections {course.sections.reduce((acc, curr) => acc +", "+curr)}
                         </Text>
-                    </Button>
+                        <Button transparent onPress={loadSections} style={styles.loadSections}>
+                            <Text style={styles.flatButton}>
+                                {Platform.OS === 'android' ? 'LOAD SECTIONS' : 'Load Sections'}
+                            </Text>
+                        </Button>
+                    </View>))
                 
             }
         </View>

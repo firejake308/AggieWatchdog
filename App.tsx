@@ -80,7 +80,6 @@ const styles = StyleSheet.create({
   },
   flatButton: {
     backgroundColor: '#500000',
-    shadowOpacity: 0,
-    shadowRadius: 0
+    elevation: 0
   }
 });
