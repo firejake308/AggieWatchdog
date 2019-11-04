@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "expo": "^35.0.0",
+    "expo-constants": "^7.0.1",
     "expo-font": "^7.0.0",
     "native-base": "^2.13.8",
     "react": "16.8.3",

@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, ReactNode } from 'react';
 import { StyleSheet, StatusBar, TouchableHighlight, TouchableNativeFeedback } from 'react-native';
 import { Root, Container, Header, Body, Right, Title, Icon, Content, Button, Fab } from 'native-base';
 import { AppLoading } from 'expo';
+import Constants from 'expo-constants';
 import * as Font from 'expo-font';
 
 import CardList from './CardList';
@@ -31,8 +32,8 @@ export default function App() {
 
   return (
     <Root>
-      <Container>
-        <Header style={styles.customHeader}>
+      <Container style={{backgroundColor: '#500000'}}>
+        <Header style={styles.customHeader} androidStatusBarColor="#500000">
           <Body>
             <Title>PingMe</Title>
           </Body>
@@ -54,7 +55,7 @@ export default function App() {
                 onPress={
                   // @ts-ignore
                   () => cardListRef.current && cardListRef.current.addCard()}
-                style={{backgroundColor: '#500000'}}
+                style={styles.maroon}
             >
                 <Icon name="add" />
             </Fab>
@@ -68,8 +69,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#ddd',
   },
   customHeader: {
-    paddingTop: StatusBar.currentHeight,
-    height: 54 + StatusBar.currentHeight,
+    /*marginTop: Constants.statusBarHeight,*/
+    backgroundColor: '#500000'
+  },
+  maroon: {
     backgroundColor: '#500000',
   },
   lightIcon: {
@@ -77,5 +80,7 @@ const styles = StyleSheet.create({
   },
   flatButton: {
     backgroundColor: '#500000',
+    shadowOpacity: 0,
+    shadowRadius: 0
   }
 });

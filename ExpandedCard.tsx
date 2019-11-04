@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { StyleSheet, Text, View, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Text, View, TouchableWithoutFeedback, findNodeHandle } from 'react-native';
 import { Form, Input, Item, Icon, CheckBox, ListItem, Button } from 'native-base';
 
 import Course from './Course';
 import { Platform } from '@unimodules/core';
 import Section from './Section';
 import validDepartments from './depts_list.json';
+import { SERVER_URL } from './util';
 
 interface ExpandedCardProps { 
     course: Course; 
@@ -23,18 +24,16 @@ export default function ExpandedCard(props: ExpandedCardProps) {
     const [isDeptValid, setDeptValid] = useState(true);
 
     function loadSections() {
-        // this will be replaced by a server call, so probably useEffects
-        setSections([
-            {course: 'ignore', sectionNum: '201', professor: 'Alan Pepper', seatsOpen: 20, seatsTotal: 22, watched: false},
-            {course: 'ignore', sectionNum: '501', professor: 'Aakash Tyagi', seatsOpen: 0, seatsTotal: 18, watched: true},
-            {course: 'ignore', sectionNum: '502', professor: 'Eun Kim', seatsOpen: 57, seatsTotal: 100, watched: false}]);
+        fetch(SERVER_URL+'/sections?department='+department+'&courseNum='+courseNum).then(
+            res => res.json()).then(res => {
+            setSections(res);
+        }).catch(err => console.log(err));
     }
 
     function renderSection(section: Section) {
-        const {sectionNum, professor, seatsOpen, seatsTotal, watched} = section;
+        const {sectionNum, professor, seatsOpen, seatsTotal} = section;
         return (<ListItem style={styles.flexRow} key={sectionNum}>
-            <CheckBox checked={watched} onPress={() => setSections(sections.map(sec => 
-                sec.sectionNum === sectionNum ? {...sec, watched: !sec.watched} : sec))} />
+            <CheckBox checked={course.sections.includes(sectionNum)} onPress={() => updateSectionNums(sectionNum)} />
             <Text style={styles.morePadding}>{sectionNum}</Text>
             <Text style={styles.morePadding}>{professor}</Text>
             <Text style={styles.lastText}>{seatsOpen}/{seatsTotal} available</Text>
@@ -49,14 +48,21 @@ export default function ExpandedCard(props: ExpandedCardProps) {
         // control the input component
         setDepartment(newVal);
         // notify parent
-        onChangeCourse({ department: newVal, courseNum: '' });
+        onChangeCourse({ department: newVal, courseNum: '', sections: [] });
     }
 
     function updateCourseNum(newVal: string) {
         // control the input component
         setCourseNum(newVal);
         // notify parent
-        onChangeCourse({...course, courseNum: newVal});
+        onChangeCourse({...course, courseNum: newVal, sections: []});
+    }
+
+    function updateSectionNums(sectionNum: string) {
+        const newSections = sections.map(sec => 
+            sec.sectionNum === sectionNum ? {...sec, watched: !sec.watched} : sec)
+        setSections(newSections);
+        onChangeCourse({...course, sections: newSections.filter(sec => sec.watched).map(sec => sec.sectionNum)})
     }
 
     return (

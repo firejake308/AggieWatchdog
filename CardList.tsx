@@ -17,11 +17,11 @@ const CardList = React.forwardRef((_props, ref) => {
     // fetch courses from server on initial load
     React.useEffect(() => {
         Notifications.getExpoPushTokenAsync().then(token => {
-            fetch(SERVER_URL + `/users/${token}/sections`).then(res => res.json()).then(({sections}) => {
-                const builtCourses = sections.map((sec: Course) => ({cardId: numCardsCreated++, course: sec}))
+            fetch(SERVER_URL + `/users/${token}/sections`).then(res => res.json()).then(({courses}) => {
+                const builtCourses = courses.map((sec: Course) => ({cardId: numCardsCreated++, course: sec}))
                 setCourses(builtCourses);
                 setServerCourses(builtCourses);
-            })
+            }).catch(err => console.log(err))
         });
     }, []);
 
@@ -39,9 +39,7 @@ const CardList = React.forwardRef((_props, ref) => {
         console.log('updateServerCourses() called');
         if (JSON.stringify(serverCourses) !== JSON.stringify(courses)) {
             // validate departments
-            console.log(serverCourses);
-            console.log(courses);
-            if (courses.some(course => !validDepartments.includes(course.department) || !course.courseNum)) {
+            if (courses.some(({course}) => !validDepartments.includes(course.department) || !course.courseNum)) {
                 // at least one dept is invalid
                 Alert.alert('Invalid Input', 'At least one of the courses you have entered appears to be invalid.'
                 +' Please check for typos.');
@@ -58,18 +56,22 @@ const CardList = React.forwardRef((_props, ref) => {
                     Toast.show('Notifications don\'t seem to work on this device')
                 );
             // push new courses to server
-            console.log(JSON.stringify({sections: courses.map(({course: {department, courseNum}}) => ({
-                department, courseNum
-            }))}));
+            console.log(JSON.stringify({
+                sections: courses.map(({course: {department, courseNum, sections}}) => 
+                    ({department, courseNum, sections})
+                )
+            }));
             Notifications.getExpoPushTokenAsync().then(token => {
                 fetch(SERVER_URL+`/users/${token}/sections`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({sections: courses.map(({course: {department, courseNum}}) => ({
-                        department, courseNum
-                    }))})
+                    body: JSON.stringify({
+                        sections: courses.map(({course: {department, courseNum, sections}}) => 
+                            ({department, courseNum, sections})
+                        )
+                    })
                 }).then(res => console.log(res.status))
             });
             

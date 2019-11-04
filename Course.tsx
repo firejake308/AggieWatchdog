@@ -1,4 +1,5 @@
 export default interface Course {
     department: string,
-    courseNum: string
+    courseNum: string,
+    sections: string[]
 }
