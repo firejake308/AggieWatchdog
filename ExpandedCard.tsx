@@ -35,7 +35,10 @@ export default function ExpandedCard(props: ExpandedCardProps) {
     function renderSection(section: Section) {
         const {sectionNum, professor, seatsOpen, seatsTotal} = section;
         return (<ListItem style={styles.flexRow} key={sectionNum}>
-            <CheckBox checked={course.sections.includes(sectionNum)} onPress={() => updateSectionNums(sectionNum)} />
+            <CheckBox 
+                color="#500000"
+                checked={course.sections.includes(sectionNum)} 
+                onPress={() => updateSectionNums(sectionNum)} />
             <Text style={styles.morePadding}>{sectionNum}</Text>
             <Text style={styles.morePadding}>{professor}</Text>
             <Text style={styles.lastText}>{seatsOpen}/{seatsTotal} available</Text>
@@ -123,7 +126,8 @@ export default function ExpandedCard(props: ExpandedCardProps) {
                         {course.sections.length ? 
                         <Text style={styles.cardPaddingFix}>
                             Currently watching sections {course.sections.reduce((acc, curr) => acc +", "+curr)}
-                        </Text> : null}
+                        </Text> 
+                        : <Text style={styles.cardPaddingFix}>No sections selected</Text>}
                         <Button transparent onPress={loadSections} style={styles.loadSections}>
                             <Text style={styles.flatButton}>
                                 {Platform.OS === 'android' ? 'LOAD SECTIONS' : 'Load Sections'}
