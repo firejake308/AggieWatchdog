@@ -14,9 +14,6 @@ interface CollapsibleCardProps {
 export default function CollapsibleCard(props: CollapsibleCardProps) {
     const {onRemoveCourse, onChange, course} = props;
     const [collapsed, setCollapsed] = useState(false);
-
-    if (course)
-    console.log('rendering collapsible card for '+course.department+course.courseNum);
     
     if (collapsed)
         return <CollapsedCard course={course} onExpand={() => setCollapsed(false)} onRemove={onRemoveCourse} />

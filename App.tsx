@@ -1,8 +1,7 @@
-import React, { useEffect, useState, ReactNode } from 'react';
-import { StyleSheet, StatusBar, TouchableHighlight, TouchableNativeFeedback } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet } from 'react-native';
 import { Root, Container, Header, Body, Right, Title, Icon, Content, Button, Fab } from 'native-base';
 import { AppLoading } from 'expo';
-import Constants from 'expo-constants';
 import * as Font from 'expo-font';
 
 import CardList from './CardList';

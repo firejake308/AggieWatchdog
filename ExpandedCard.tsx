@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { StyleSheet, Text, View, TouchableWithoutFeedback, findNodeHandle } from 'react-native';
+import { StyleSheet, Text, View, TouchableWithoutFeedback } from 'react-native';
 import { Form, Input, Item, Icon, CheckBox, ListItem, Button, Spinner } from 'native-base';
 
 import Course from './Course';
@@ -57,10 +57,12 @@ export default function ExpandedCard(props: ExpandedCardProps) {
     }
 
     function updateSectionNums(sectionNum: string) {
-        const newSections = sections.map(sec => 
-            sec.sectionNum === sectionNum ? {...sec, watched: !sec.watched} : sec)
-        setSections(newSections);
-        onChangeCourse({...course, sections: newSections.filter(sec => sec.watched).map(sec => sec.sectionNum)})
+        let newSections = [];
+        if (course.sections.includes(sectionNum))
+            newSections = course.sections.filter(sec => sec != sectionNum)
+        else
+            newSections = course.sections.concat([sectionNum])
+        onChangeCourse({...course, sections: newSections})
     }
 
     return (
