@@ -87,6 +87,7 @@ const CardList = React.forwardRef((_props, ref) => {
                 course: {
                     department: '',
                     courseNum: '',
+                    sections: []
                 }
             }])
         },

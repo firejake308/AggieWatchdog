@@ -120,9 +120,10 @@ export default function ExpandedCard(props: ExpandedCardProps) {
                     </View>) 
                 :   (loading ? <Spinner color="#500000" /> : 
                     (<View>
+                        {course.sections.length ? 
                         <Text style={styles.cardPaddingFix}>
                             Currently watching sections {course.sections.reduce((acc, curr) => acc +", "+curr)}
-                        </Text>
+                        </Text> : null}
                         <Button transparent onPress={loadSections} style={styles.loadSections}>
                             <Text style={styles.flatButton}>
                                 {Platform.OS === 'android' ? 'LOAD SECTIONS' : 'Load Sections'}
