@@ -34,11 +34,10 @@ export default function ExpandedCard(props: ExpandedCardProps) {
 
     function renderSection(section: Section) {
         const {sectionNum, professor, seatsOpen, seatsTotal} = section;
-        return (<ListItem style={styles.flexRow} key={sectionNum}>
+        return (<ListItem style={styles.flexRow} key={sectionNum} onPress={() => updateSectionNums(sectionNum)}>
             <CheckBox 
                 color="#500000"
-                checked={course.sections.includes(sectionNum)} 
-                onPress={() => updateSectionNums(sectionNum)} />
+                checked={course.sections.includes(sectionNum)} />
             <Text style={styles.morePadding}>{sectionNum}</Text>
             <Text style={styles.morePadding}>{professor}</Text>
             <Text style={styles.lastText}>{seatsOpen}/{seatsTotal} available</Text>

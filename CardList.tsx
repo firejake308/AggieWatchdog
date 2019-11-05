@@ -64,20 +64,24 @@ const CardList = React.forwardRef((_props, ref) => {
         ));
     }
 
-    function updateServerCourses() {
+    async function updateServerCourses() {
         console.log('updateServerCourses() called');
         if (JSON.stringify(serverCourses) !== JSON.stringify(courses)) {
+            // filter out blank courses
+            const filteredCourses = courses.filter(({course}) => course.department !== '')
+            setCourses(filteredCourses); // erase empty cards to reflect server values
+
             // validate departments
-            if (courses.some(({course}) => !validDepartments.includes(course.department) || !course.courseNum)) {
+            if (filteredCourses.some(({course}) => !validDepartments.includes(course.department) || !course.courseNum)) {
                 // notify user and stop server push
                 Alert.alert('Invalid Input', 'At least one of the courses you have entered appears to be invalid.'
-                +' Please check for typos.');
+                +' Please check for typos and blank fields.');
                 return;
             }
 
             // initial registration if necessary
             if (serverCourses.length === 0)
-                registerPushNotifications().then(status => {
+                return registerPushNotifications().then(status => {
                     if (status)
                         console.log('Yes, I have permission to post notifications');
                     else
@@ -86,27 +90,28 @@ const CardList = React.forwardRef((_props, ref) => {
                     Toast.show({text: 'Notifications don\'t seem to work on this device'})
                 );
             // push new courses to server
-            Notifications.getExpoPushTokenAsync().then(token => {
+            return Notifications.getExpoPushTokenAsync().then(token => {
                 fetch(SERVER_URL+`/users/${token}/sections`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        sections: courses.map(({course: {department, courseNum, sections}}) => 
+                        sections: filteredCourses.map(({course: {department, courseNum, sections}}) => 
                             ({department, courseNum, sections})
                         )
                     })
                 }).then(res => {
-                    if (res.status === 200)
+                    if (res.status === 200) {
                         Toast.show({text: 'Saved changes successfully'})
+                        
+                        // save new server state
+                        setServerCourses(filteredCourses);
+                    }
                     else
                         Toast.show({text: 'Error ' + res.status})
                 })
             });
-            
-            // save new server state
-            setServerCourses(courses);
         }
     }
 

@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { Root, Container, Header, Body, Right, Title, Icon, Content, Button, Fab } from 'native-base';
+import { Root, Container, Header, Body, Right, Title, Icon, Content, Button, Fab, Spinner } from 'native-base';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 
 import CardList from './CardList';
 
 export default function App() {
-  const [loading, setLoading] =  useState(true);
+  const [fontLoading, setFontLoading] = useState(true);
+  const [coursesLoading, setCoursesLoading] = useState(false);
   const cardListRef = React.useRef();
 
   // load fonts before rendering native base elements
@@ -17,12 +18,12 @@ export default function App() {
         Roboto: require('native-base/Fonts/Roboto.ttf'),
         Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
       })
-      setLoading(false);
+      setFontLoading(false);
     }
     loadFont(); 
-  }, [loading]);
+  }, [fontLoading]);
 
-  if (loading)
+  if (fontLoading)
     return (
       <Root>
         <AppLoading />
@@ -41,8 +42,9 @@ export default function App() {
               style={styles.flatButton}
               onPress={
                 // @ts-ignore
-                () => cardListRef.current && cardListRef.current.updateCourses()}>
-              <Icon name="save" style={styles.lightIcon} />
+                () => setCoursesLoading(true) || cardListRef.current && cardListRef.current.updateCourses()
+                .then(() => setCoursesLoading(false))}>
+              {coursesLoading? <Spinner color="white" /> : <Icon name="save" style={styles.lightIcon} />}
             </Button>
           </Right>
         </Header>
