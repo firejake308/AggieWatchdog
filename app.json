@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Ping Me",
-    "slug": "PingMe",
+    "name": "Watchdog",
+    "slug": "Watchdog",
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": [

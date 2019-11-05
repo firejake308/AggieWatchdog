@@ -35,7 +35,7 @@ export default function App() {
       <Container style={{backgroundColor: '#500000'}}>
         <Header style={styles.customHeader} androidStatusBarColor="#500000">
           <Body>
-            <Title>PingMe</Title>
+            <Title>Watchdog</Title>
           </Body>
           <Right>
             <Button 
