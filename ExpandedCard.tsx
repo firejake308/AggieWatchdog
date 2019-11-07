@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { StyleSheet, Text, View, TouchableWithoutFeedback } from 'react-native';
-import { Form, Input, Item, Icon, CheckBox, ListItem, Button, Spinner } from 'native-base';
+import { Form, Input, Item, Icon, CheckBox, ListItem, Button, Spinner, Toast } from 'native-base';
 
 import Course from './Course';
 import { Platform } from '@unimodules/core';
@@ -29,7 +29,11 @@ export default function ExpandedCard(props: ExpandedCardProps) {
             res => res.json()).then(res => {
             setSections(res);
             setLoading(false);
-        }).catch(err => console.log(err));
+        }).catch(err => {
+            console.log(err)
+            setLoading(false);
+            Toast.show({text: 'No sections found'})
+        });
     }
 
     function renderSection(section: Section) {
@@ -37,7 +41,8 @@ export default function ExpandedCard(props: ExpandedCardProps) {
         return (<ListItem style={styles.flexRow} key={sectionNum} onPress={() => updateSectionNums(sectionNum)}>
             <CheckBox 
                 color="#500000"
-                checked={course.sections.includes(sectionNum)} />
+                checked={course.sections.includes(sectionNum)}
+                onPress={() => updateSectionNums(sectionNum)} />
             <Text style={styles.morePadding}>{sectionNum}</Text>
             <Text style={styles.morePadding}>{professor}</Text>
             <Text style={styles.lastText}>{seatsOpen}/{seatsTotal} available</Text>
