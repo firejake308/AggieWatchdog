@@ -7,6 +7,8 @@ npm-debug.*
 *.key
 *.mobileprovision
 *.orig.*
+*.pem
+*.bak
 *.code-workspace
 .vscode
 web-build/

@@ -1,7 +1,7 @@
 import { Notifications } from 'expo';
 import * as Permissions from 'expo-permissions';
 
-export const SERVER_URL = 'https://the-12th-eye.herokuapp.com';
+export const SERVER_URL = 'https://aggie-watchdog.herokuapp.com';
 
 export async function registerPushNotifications() {
     // check if we already have permission

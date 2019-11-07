@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { Root, Container, Header, Body, Right, Title, Icon, Content, Button, Fab, Spinner } from 'native-base';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
@@ -32,10 +32,10 @@ export default function App() {
 
   return (
     <Root>
-      <Container style={{backgroundColor: '#500000'}}>
-        <Header style={styles.customHeader} androidStatusBarColor="#500000">
+      <Container style={Platform.OS === 'android' ? {backgroundColor: '#500000'} : {}}>
+        <Header style={ Platform.OS === 'android' ? styles.customHeader : {}} androidStatusBarColor="#500000">
           <Body>
-            <Title>Watchdog</Title>
+            <Title>Aggie Watchdog</Title>
           </Body>
           <Right>
             <Button 
