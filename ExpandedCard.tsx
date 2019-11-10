@@ -50,7 +50,8 @@ export default function ExpandedCard(props: ExpandedCardProps) {
     }
 
     function validateDepartment(input: string) {
-        setDeptValid(validDepartments.includes(input));
+        updateDepartment(input.toUpperCase());
+        setDeptValid(validDepartments.includes(input.toUpperCase()));
     }
 
     function updateDepartment(newVal: string) {

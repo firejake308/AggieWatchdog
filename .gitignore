@@ -11,6 +11,7 @@ npm-debug.*
 *.bak
 *.code-workspace
 .vscode
+google-services.json
 web-build/
 web-report/
 

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Watchdog",
-    "slug": "Watchdog",
+    "name": "Aggie Watchdog",
+    "slug": "aggie-watchdog",
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": [
@@ -9,7 +9,7 @@
       "android",
       "web"
     ],
-    "version": "1.1.0",
+    "version": "1.1.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -33,7 +33,9 @@
     "android": {
       "package": "com.insertcoolnamehere.aggiewatchdog",
       "googleServicesFile": "./google-services.json",
-      "versionCode": 3
-    }
+      "versionCode": 4
+    },
+    "description": "Aggie Watchdog is a mobile app that notifies students at Texas A&M University when seats open up in a class that they want",
+    "githubUrl": "https://github.com/firejake308/AggieWatchdog"
   }
 }
